@@ -958,7 +958,7 @@ sub read_file {
     my $charset = shift || 'UTF-8';
     my $linenum = 0;
     my @entries = ();
-
+    $filename =~ s/^(.*)\n*$/$1/gm;
     open( my $in, "<:encoding($charset)", $filename )
       or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
     while ( defined( my $textline = <$in> ) ) {
@@ -971,7 +971,7 @@ sub read_file {
         while (
             $textline =~ /^((?:[^%]|(?<!\\)(?:\\\\)*\\%)*)
                               \\(include|input)
-                              \{([^\{]*)\}(.*)$/x
+			      \{([^\{\}]*)\}(.*)$/x
           )
         {
             my ( $begin, $newfilename, $end ) = ( $1, $3, $4 );
